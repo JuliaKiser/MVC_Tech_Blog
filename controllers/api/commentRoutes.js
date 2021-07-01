@@ -30,7 +30,7 @@ router.post('/', withAuth, (req, res) => {
   //Check for a session
   if (req.session) {
     Comment.create({
-      comment_text: req.body.comment_text,      
+      comment_content: req.body.comment_content,      
       post_id: req.body.post_id,
       user_id: req.session.user_id
     })
@@ -45,7 +45,7 @@ router.post('/', withAuth, (req, res) => {
 // this allows the user to update a comment
 router.put('/:id', withAuth, (req,res)=> {
   Comment.update({
-    comment_text: req.body.comment_text
+    comment_content: req.body.comment_content
   }, {
     where: {
       id: req.params.id
