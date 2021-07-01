@@ -11,6 +11,21 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('./:id', (req,res)=> {
+  Comment.findAll({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(dbCommentData =>
+    res.json(dbCommentData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
+// this allows a user to create a comment
 router.post('/', withAuth, (req, res) => {
   //Check for a session
   if (req.session) {
@@ -27,6 +42,27 @@ router.post('/', withAuth, (req, res) => {
   }
 });
 
+// this allows the user to update a comment
+router.put('/:id', withAuth, (req,res)=> {
+  Comment.update({
+    comment_text: req.body.comment_text
+  }, {
+    where: {
+      id: req.params.id
+    }
+  }).then(dbCommentData => {
+    if (!dbCommentData) {
+      res.status(404).json({message: 'Comment not associated with this ID'});
+      return;
+    }
+    res.json(dbCommentData);
+  }).catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
+});
+
+// this allows a user to delete a comment
 router.delete('/:id', (req, res) => {
   Comment.destroy({
     where: {
