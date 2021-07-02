@@ -11,7 +11,7 @@ router.get('/', withAuth, (req, res) => {
             'id',
             'title',
             'post_content',
-            'date_created'
+            'created_at'
         ],
         include: [{
             model: Comment,
@@ -20,7 +20,7 @@ router.get('/', withAuth, (req, res) => {
               'comment_content',
               'post_id',
               'user_id',
-              'date_created'
+              'created_at'
             ],
             include: {
               model: User,
@@ -32,16 +32,16 @@ router.get('/', withAuth, (req, res) => {
             attributes: ['username']
           }
         ]
-    });
+    }).then(dbPostData => {
+        const posts = dbPostData.map(post => post.get({ plain: true }));
+        res.render('dashboard', { posts, loggedIn: req.session.loggedIn });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
 })
-.then(dbPostData => {
-    const posts = dbPostData.map(post => post.get({ plain: true }));
-    res.render('dashboard', { posts, loggedIn: true });
-  })
-  .catch(err => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+
 
 router.get('/edit/:id', withAuth, (req, res) => {
     Post.findOne({
@@ -52,7 +52,7 @@ router.get('/edit/:id', withAuth, (req, res) => {
             'id',
             'title',
             'post_content',
-            'date_created'
+            'created_at'
         ],
         include: [{ 
             model: User,
@@ -65,7 +65,7 @@ router.get('/edit/:id', withAuth, (req, res) => {
                 'comment_content',
                 'post_id',
                 'user_id',
-                'date_created'
+                'created_at'
             ]
            }
         ]
