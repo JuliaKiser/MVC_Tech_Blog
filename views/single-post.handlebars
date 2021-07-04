@@ -1,5 +1,5 @@
 
-{{> post-info post}}
+{{> post post}}
 
 {{#if loggedIn}}
 <div class="card">
@@ -7,7 +7,7 @@
     <form class="card-body comment-form" id="comment-form">
 
         <label class="form-label">Add Your Comment</label>
-        <input id="comment" name="comment-body" class="form-input" />
+        <input id="comment-body" name="comment-body" class="form-input" data-id={{post.id}}/>
 
         <button type="submit" class="btn">Submit</button>
     </form>
@@ -17,5 +17,5 @@
 {{> comment post.comments}}
 
 {{#if loggedIn}}
-<script src="./javascript/comment.js"></script>
+<script src="/javascript/comment.js"></script>
 {{/if}}

@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('./:id', (req,res)=> {
+router.get('/:id', (req,res)=> {
   Comment.findAll({
     where: {
       id: req.params.id

@@ -48,11 +48,61 @@ router.get("/login", (req, res) => {
     res.redirect("/");
     return;
   }
-  res.render("login");
+  res.render("login", { loggedIn: req.session.loggedIn });
 });
 
 router.get("/signup", (req, res) => {
-  res.render("signup");
+  if (req.session.loggedIn) {
+    res.redirect("/");
+  }
+  res.render("signup", { loggedIn: req.session.loggedIn });
+});
+
+router.get("/post/:id", (req, res) => {
+  Post.findOne({
+    where: {
+      id: req.params.id,
+    },
+    attributes: ["id", "post_content", "title", "created_at"],
+    include: [
+      {
+        model: User,
+        attributes: ["username"],
+      },
+      {
+        model: Comment,
+        attributes: [
+          "id",
+          "comment_content",
+          "post_id",
+          "user_id",
+          "created_at",
+        ],
+        include: {
+          model: User,
+          attributes: ["username"],
+        },
+      },
+    ],
+  })
+    .then((dbPostData) => {
+      if (!dbPostData) {
+        res.status(404).json({ message: "No post associated with this id" });
+        return;
+      }
+
+      //const posts = dbPostData.map((project) => project.get({ plain: true }));
+      const post = dbPostData.get({ plain: true });
+      console.log(post);
+      res.render("single-post", {
+        post,
+        loggedIn: req.session.loggedIn,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
