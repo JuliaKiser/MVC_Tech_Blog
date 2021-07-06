@@ -9,7 +9,7 @@
 
 ## Portfolio Links
 
-Deployed Link: 
+Deployed Link: https://jk-tech-blog.herokuapp.com/
 
 Github Repo Link: https://github.com/JuliaKiser/MVC_Tech_Blog
 
